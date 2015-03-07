@@ -2,19 +2,24 @@
 
 =head1 NAME
 
-fyfsp — fix the force stealing prevention in Compiz (and perhaps other WMs)
+fyfsp - fix the force stealing prevention in Compiz (and perhaps other WMs)
 
 =head1 SYNOPSIS
 
-Fix xfocus by listening to X11 events.  When the focus changes and the window
-types aren't special or related to the various toolbars and docks and things,
-then return focus to the window under the mouse.
+Do this by moving new windows to the top of the window stack, even if that
+presents a small risk of typing in the wrong window sometimes.
 
 =head1 CONFIGURATION OPTIONS
 
 TODO: I suppose there should be a config file or some switches or something
 (avoid windows, etc).  Also, most of the C<--with-x> and C<--without> build
 options should actually be runtime switches.
+
+=head1 WHAT DOES THIS ACTUALLY DO?
+
+It listens to X11 events.  When the focus changes and the window types aren't
+special or related to the various toolbars and docks and things, then the focus
+is returned to the window under the mouse.
 
 =head1 WHAT SETTINGS DO I USE TO COMPLIMENT THIS THING IN MY WINDOW MANAGER?
 
