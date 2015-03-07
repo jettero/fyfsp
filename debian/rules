@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+override_dh_auto_configure:
+	dh_auto_configure -- --with-upstart --prefix=/usr
+
+override_dh_auto_build:
+	dh_auto_build -- README fyfsp
+
+%:
+	dh $@ --with autoreconf
