@@ -1,0 +1,185 @@
+=encoding utf8
+
+=head1 NAME
+
+fyfsp — fuck you focus stealing prevention
+
+=head1 SYNOPSIS
+
+This is a service you can run to babysit your X11 window manager and put the
+window focus back on the window under the mouse whenever the window manager
+steals it or lets another window steal it.
+
+If you're on Ubuntu with upstart (maybe 12.x?? through 14.x) and you want to
+inflict this on all new sessions, do this.
+
+=head2 build and install
+
+ [ -f configure ] || ./autogen.sh
+ ./configure --with-upstart --prefix=/usr
+ make
+ sudo make install
+
+Log out of your session, then log back in.  C<fyfsp> should be running now, I
+messed up the installer, you're not on Ubuntu, or something else went wrong.
+
+=head2 build and install just for you
+
+If you just want it for you, probably the most rational choice on a multi-user
+system — people still have this? — then you'd do this instead.
+
+=head2 build, install, and start it
+
+ [ -f configure ] || ./autogen.sh
+ ./configure --prefix=$HOME
+ make install
+ copy upstart.conf ~/.config/upstart
+ start fyfsp
+
+=head2 run on X11 systems other than Ubuntu/upstart
+
+Actually, if you don't have upstart, but you do have broken focus stealing
+prevention, you can probably just run the thing from your C<.xsessionrc>.
+
+ ~/bin/fyfsp & # doesn't have a daemon mode
+
+=head1 WHAT DOES THIS ACTUALLY DO?
+
+It listens to X11 events.  When the focus changes and the window types aren't
+special or related to the various toolbars and docks and things, then the focus
+is returned to the window under the mouse.
+
+=head1 WHAT SETTINGS DO I USE TO COMPLIMENT THIS THING IN MY WINDOW MANAGER?
+
+Set your window manager to do the normal xmouse things.  Do not enable focus
+stealing prevention, it's broken (see L</WHAT THE HELL?> below).
+
+=head1 WHAT THE HELL?
+
+Back in 1998, I was the happiest X11 user in the world.  I was using AfterStep
+and I laughed at all the nincompoops using Windows 95 and Windows 98.  “Hahaha,
+I'm a superior Loonix Nerd” I'd tell them.
+
+I don't think I could go back to AfterStep — don't get me wrong.  I love my
+Ubuntu/Unity/Compiz setup. … except for one thing.  It's been C<2014-1998=16>
+years, give or take, and I'm still not over it.  I like focus follows mouse.
+
+I don't like sloppy mouse, and I sure as hell don't like click-to-focus.  I can
+use it when push comes to shove.  I spend an awful lot of time in Windows (for
+the games and for the billing system at work, etc) but I don't like it.
+
+So this gives me pure white hot rage and I can't move past it.  Yes, Compiz has
+a general setting for “focus stealing prevention.”  But it doesn't work.  It
+does I<NOT> work.  I'm prepared to tell you why, but first, this is the basic
+workflow I'm not willing to live without.
+
+    1. Build a sweet document nobody will ever read
+    2. Render it in evince or whatever
+    3. Leave this window open
+    4. Rebuild the doc from the commandline
+    5. Evince will update the document view including the current page that was
+       carefully selected.
+    6. Evince will now steal focus — what an asshole. Now I have to
+       use the mouse.
+
+And again, here's the workflow, but a difference process.
+
+    1. Design some complicated algorithm for checking line of sight
+       or whatever
+    2. Test it with some graphical representation of the problem space 
+       in image viewer du jour
+    3. Tweak design, render image
+    4. The image updates (or a new window pops up or whatever)
+    5. The new image steals focus and now I have to go use the mouse instead
+       of hitting up-arrow-enter or running a different test.
+
+It's really worse than the above.  In the scenarios above, Compiz was already
+doing xfocus, but it has now broken xfocus by moving the focus somewhere else
+without the user wishing for this to happen — I know the user doesn't want this
+because the mouse is pointed where the focus is supposed to be, that's what
+xfocus is for.
+
+Because Compiz broke the xfocus, I Now I have to move the mouse to some other
+window and back where I had it in the first place.  This is fine once in a
+while, or maybe twice a day, but fifty or sixty times in a row during dev of
+some stupid idea that will never see the light of day?  Now you're killing me.
+
+AfterStep handled this correctly.  Nothing stole my focus whether a window was
+created or not.  Focus followed the mouse I<only> and did not give a care in the
+world that the window was newly mapped or that it explicitly asked for focus —
+because that's not where my mouse was pointing.  The other window didn't have
+any business having focus.
+
+=head1 COMPIZ TOTALLY HAS FOCUS STEALING PREVENTION YOU DOLT
+
+Yes it does.  But it doesn't work.  It I<does> prevent focus stealing, but you
+can't actually use it in practice because it conflates B<focus> with B<raise>.
+So here's my workflow in Quartus with focus stealing prevention turned on.
+
+    1. Pop open a project in Quartus
+    2. Try to compile it – this can take a couple hours
+    3. Realize I forgot something
+    4. Cancel the build
+    5. ??? Why is this fucking window broken now? Goddamn it! ??
+    6. Oh, I see the problem, there's a modal dialog underneath the
+       fucking Quartus window.
+
+       “You wanna cancel build” [OK] [Cancel]
+
+In fact, every single new window, dialog, or widget will pop under everything
+else I'm doing no matter what.  If you go source diving in Compiz core you'll
+find that it doesn't even attempt to stack the window if it's not allowed to
+steal focus.
+
+I guess I see what they're doing.  Sometimes a window might pop over what you're
+doing and you'll type in there by mistake.  Clearly since focus stealing is an
+issue for the user, we should put every single new window at the bottom of the
+stack so they don't even know it's there and with no UI feedback of any kind so
+they're just left wondering why this new modal window (don't even get me started
+on modal windows) makes the application appear to have completely stopped
+working.
+
+I hate this.  It gives me pure white hot rage.  These are my choices:
+
+=over
+
+=item Broken focus-follows-mouse
+
+None of my beloved multi-window workflows can be made to work without using the
+mouse between every iteration of whatever I'm doing.
+
+=item Broken window management
+
+None of my new windows appear where they should … the top of the window stack.
+
+=back
+
+I've been living without working xfocus for a long time now.  I took a break
+from normalcy for a while and ran Ratpoison for about a year.  That was nice,
+but everything you do with browsers and the like is slow because it takes 2 or 3
+keystrokes (with key combinations) to change windows; and in practice this slows
+me down more than broken xfocus.  You do get used to Ratpoison, but it's also
+clumsy in other ways.
+
+I don't want to live without xfocus anymore.  I hate it.  I'm angry at Gnome for
+breaking it.  I'm angry with de Icaza for his war on user choice.  I'm angry
+with the Metacity developers for conflating focus and raise in the first place.
+I'm just plain angry.
+
+=head1 LIST OF PEOPLE THAT HATE THINGS
+
+I'm well aware all of this anger is completely misplaced.  I've come to terms
+with it.  I think you should to.  But in case you don't want to and you'd like
+your name added to the list of people angry with me, angry with this project,
+angry with the idea of xfocus, angry with my ideas, angry with the name of the
+project, or angry with the very notion of me as a person.  Shoot me an email and
+I'll add you to the following list.  I might even be willing to engage in some
+witty banter along the way — as much as I'm capable and time allows anyway.
+
+    FIXME: I'm sure we can get a list going here
+
+=head1 AUTHOR
+
+Paul Miller C<< <paul+fyfsp@voltar.org> >>
+
+
