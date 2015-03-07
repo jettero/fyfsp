@@ -1,0 +1,5 @@
+fyfsp (1.0) trusty; urgency=low
+
+  * provide minimum debian/ files for building debs
+
+ -- Paul Miller <paul+fyfsp@voltar.org>  Sat, 07 Mar 2015 10:49:55 -0500

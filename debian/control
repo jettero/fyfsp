@@ -1,0 +1,14 @@
+Source: fyfsp
+Maintainer: Paul Miller <paul+fyfsp@voltar.org>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.5
+Build-Depends: debhelper (>= 9), pkg-config, gawk, libxdmcp-dev, x11proto-core-dev, libx11-dev, mime-support, libsigsegv2, libglib2.0-0, libxau-dev, libpthread-stubs0-dev, libxcb1-dev, uthash-dev, x11proto-kb-dev, libpopt0
+
+
+Package: fyfsp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: fix xfocus by taking focus back from windows that steal it
+ Do this by moving new windows to the top of the window stack, even if that
+ presents a small risk of typing in the wrong window sometimes.
