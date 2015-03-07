@@ -31,6 +31,7 @@ README: README.pod
 	pod2text README.pod > README
 
 .pod.1:
+	podchecker $<
 	pod2man --release $(distdir) -c "Annoyed User Commands" --utf8 $< $@
 
 .pod.html:
