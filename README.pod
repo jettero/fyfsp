@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-fyfsp — fuck you focus stealing prevention
+fyfsp - fuck you focus stealing prevention
 
 =head1 SYNOPSIS
 
