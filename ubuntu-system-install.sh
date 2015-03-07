@@ -1,22 +1,7 @@
 #!/bin/bash
 
-set -e -x
-PS4="$0 exec: "
+debuild -i -us -uc -b
+sudo dpkg -i ../fyfsp_1.0_amd64.deb
 
-if [ -f configure ]; then
-    ./configure --with-upstart --prefix=/usr
-
-else
-    ./autogen.sh --with-upstart --prefix=/usr
-fi
-
-make -j 10
-
-if [ ! "$(id -u)" = 0 ]; then
-    sudo make install
-
-else
-    make install
-fi
-
-restart fyfsp
+restart fyfsp || \
+    echo "NOTE: if the job is unknown, it's probable that your terminal doesn't know about your dbus session"
