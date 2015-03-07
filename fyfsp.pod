@@ -1,0 +1,30 @@
+=encoding utf8
+
+=head1 NAME
+
+fyfsp — fix the force stealing prevention in Compiz (and perhaps other WMs)
+
+=head1 SYNOPSIS
+
+Fix xfocus by listening to X11 events.  When the focus changes and the window
+types aren't special or related to the various toolbars and docks and things,
+then return focus to the window under the mouse.
+
+=head1 CONFIGURATION OPTIONS
+
+TODO: I suppose there should be a config file or some switches or something
+(avoid windows, etc).  Also, most of the C<--with-x> and C<--without> build
+options should actually be runtime switches.
+
+=head1 WHAT SETTINGS DO I USE TO COMPLIMENT THIS THING IN MY WINDOW MANAGER?
+
+Set your window manager to do the normal x-mouse things.  Do not enable focus
+stealing prevention, it's broken (see “WHAT THE HELL?” in the C<README>).
+
+=head1 AUTHOR
+
+Paul Miller C<< <paul+fyfsp@voltar.org> >>
+
+=head1 COPYRIGHT
+
+Copyright 2015 Paul Miller — released under the GPLv3

@@ -1,0 +1,45 @@
+#!/usr/bin/perl -CA
+
+BEGIN {
+    # to use this colorizer, run this from the commandline:
+    #  cpan common::sense App::HI
+
+    # Use the colorizor packages or fall back on cat
+    for my $p (qw(common::sense App::HI)) {
+        warn "no $p, falling back on cat" and exec "cat"
+            unless eval "use $p; 1";
+    }
+}
+
+my %o;
+
+@ARGV = (
+    '.*'                                 => 'coal',
+    '^has\S+:.*'                         => 'white',
+    'cache-[^(]+'                        => 'orange',
+    '[[]miss[]]'                         => 'red',
+    '[[]hit[]]'                          => 'green',
+    '^.*?error(?:\(\d+\))?:.*'           => 'red',
+    '<unknown status code>'              => 'yellow on red',
+    '\[top\]'                            => 'orange',
+    '0x[a-f0-9]+'                        => 'sky',
+    '^  kill'                            => 'orange',
+    'get_property'                       => 'ocean',
+    'get_wm_type(?:_recursively)?'       => 'purple',
+    'get_wm_state(?:_recursively)?'      => 'violet',
+    'same_group'                         => 'yellow',
+    '_callback'                          => 'red',
+    test_rat_window_has_focus            => 'cyan',
+    '_NET_WM_[A-Z_]+'                    => 'umber',
+    '^populated.*'                       => 'coal',
+    'XEvent\(\w+\)'                      => 'white on black',
+    '[[]XXX[^]]*[]]'                     => 'todo',
+    true                                 => 'green',
+    false                                => 'red',
+    '∅'                                  => 'cyan on blue',
+    '∈'                                  => 'lime on blue',
+    '∉'                                  => 'red  on blue',
+    'XSetInputFocus'                     => 'white on blue',
+);
+
+App::HI->fire_filter(%o);
