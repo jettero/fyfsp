@@ -10,30 +10,26 @@ This is a service you can run to babysit your X11 window manager and put the
 window focus back on the window under the mouse whenever the window manager
 steals it or lets another window steal it.
 
-If you're on Ubuntu with upstart (maybe 12.x?? through 14.x) and you want to
-inflict this on all new sessions, do this.
+=head2 get build and install
 
-=head2 build and install
+If you're on Ubuntu trusty with upstart and you want to inflict this on all new
+sessions, do this:
 
- [ -f configure ] || ./autogen.sh
- ./configure --with-upstart --prefix=/usr
- make
- sudo make install
-
-Log out of your session, then log back in.  C<fyfsp> should be running now, I
-messed up the installer, you're not on Ubuntu, or something else went wrong.
+ git clone https://github.com/jettero/fyfsp
+ cd fyfsp
+ ./ubuntu-system-install.sh
 
 =head2 build and install just for you
 
 If you just want it for you, probably the most rational choice on a multi-user
-system — people still have this? — then you'd do this instead.
+system, then you'd do this instead:
 
 =head2 build, install, and start it
 
  [ -f configure ] || ./autogen.sh
  ./configure --prefix=$HOME
  make install
- copy upstart.conf ~/.config/upstart
+ cp upstart.conf ~/.config/upstart
  start fyfsp
 
 =head2 run on X11 systems other than Ubuntu/upstart
