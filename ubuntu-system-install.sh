@@ -5,8 +5,12 @@ function die() {
     exit 1
 }
 
-(debuild -i -us -uc -b || sudo apt-get install build-essential devscripts) \
-    || die "no debuild, this is not going to work"
+(
+    debuild -i -us -uc -b \
+        || sudo apt-get install build-essential devscripts
+    debuild -i -us -uc -b
+    ) \
+    || die "debuild failed. this is not going to work."
 
 sudo dpkg -i ../fyfsp_1.0_amd64.deb \
     || die "can't install the bin for some reason"
