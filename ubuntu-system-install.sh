@@ -7,7 +7,7 @@ function die() {
 
 (
     debuild -i -us -uc -b \
-        || sudo apt-get install build-essential devscripts
+        || sudo apt-get install build-essential devscripts dh-autoreconf
     debuild -i -us -uc -b
     ) \
     || die "debuild failed. this is not going to work."
