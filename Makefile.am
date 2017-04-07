@@ -85,3 +85,10 @@ fyfsp-debug: $(fyfsp_SOURCES) Makefile config.h
 
 debug run: fyfsp-debug
 	gdb --batch --eval-command run --eval-command bt ./$< 2>&1 | ./colorize-debugs
+
+
+# I can't think of any way to actually test this, particularly on a headless
+# system like travis-ci ... but if it built and doesn't immediately sagfault,
+# that's something I guess
+test:
+	DISPLAY=:$$$$.$$$$ ./fyfsp 2>&1 | grep -q refused
