@@ -1,5 +1,11 @@
-
 language: C
 group:    stable
 dist:     precise
 os:       linux
+
+compiler:
+  - clang
+  - gcc
+
+before_script:
+  - bash autogen.sh
