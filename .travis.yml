@@ -8,4 +8,5 @@ compiler:
   - gcc
 
 before_script:
+  - sudo apt-get install automake autoconf
   - bash autogen.sh
