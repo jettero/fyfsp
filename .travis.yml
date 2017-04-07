@@ -1,0 +1,5 @@
+
+language: C
+group:    stable
+dist:     precise
+os:       linux
