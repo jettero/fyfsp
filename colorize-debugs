@@ -1,4 +1,4 @@
-#!/usr/bin/perl -CA
+#!/usr/bin/env perl
 
 BEGIN {
     # to use this colorizer, run this from the commandline:
