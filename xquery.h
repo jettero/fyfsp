@@ -90,6 +90,8 @@ typedef enum {
 
 } xpsv;
 
+Bool XFetchClass(Display *display, Window window, char **class_name_return);
+
 void window_query_setup(Display *display);
 xptv get_wm_type(Display *display, Window window);
 xpsv get_wm_state(Display *display, Window window);

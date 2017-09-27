@@ -4,6 +4,7 @@
 #include "cache.h"
 
 #include <X11/Xutil.h>
+#include <X11/Xatom.h>
 #include <assert.h>
 
 #define ATOMS 28
@@ -81,6 +82,20 @@ void dump_properties(int nitems, int actual_format, const unsigned char *prop) {
 
 #define XPTI_MODE 0
 #define XPSI_MODE 1
+
+Bool XFetchClass(Display *display, Window window, char **class_name_return) {
+    XClassHint *xch = XAllocClassHint();
+    *class_name_return = NULL;
+    if( xch ) {
+        XGetClassHint(display, window, xch);
+        if( xch->res_class )
+            XFree(xch->res_class);
+        if( xch->res_name )
+            *class_name_return = xch->res_name;
+        XFree(xch);
+    }
+    return 0;
+}
 
 int get_property(Display *display, Window window, unsigned char mode) {
     Atom actual_type;

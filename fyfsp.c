@@ -12,6 +12,26 @@
 #include "xquery.h"
 #include "cache.h"
 
+char *filter = NULL;
+
+void process_options(int argc, char **argv) {
+    int c;
+    while( (c=getopt(argc, argv, "hf:")) != -1 ) {
+        switch(c) {
+            case 'h':
+                dprintf(1, "fyfsp [-h] [-f filter]\n");
+                dprintf(1, "\nFiltering is simple string matching against the window title and class. "
+                        "Fancier filters are a todo item. If the filter string is in either the title "
+                        "or in the class: go ahead and fyfsp the focus change, otherwise, ignore it.\n"
+                        );
+                exit(0);
+            case 'f':
+                filter = optarg;
+                break;
+        }
+    }
+}
+
 int (*defaulthandler)();
 
 int errorhandler(Display *display, XErrorEvent *error) {
@@ -62,13 +82,46 @@ void do_mainloop_checks(Display *display, Window has_rat, Window has_focus) {
 
             else {
                 printf("has-focus: 0x%lx ∉ has-rat: 0x%lx\n", has_focus, has_rat);
-                fuck_window_manager(display, has_rat);
+
+                int skip = 0;
+                if( filter ) {
+                    int name_match = 0;
+                    int class_match = 0;
+
+                    char *wm_name;
+                    char *wm_class;
+
+                    XFetchName(display, has_rat, &wm_name);
+                    XFetchClass(display, has_rat, &wm_class);
+
+                    printf("filter=\"%s\"", filter);
+
+                    if(wm_name) {
+                        name_match = strstr(wm_name, filter) != NULL;
+                        printf(" wm_name=\"%s\"<%d>", wm_name, name_match);
+                        XFree(wm_name);
+                    }
+
+                    if(wm_class) {
+                        class_match = strstr(wm_class, filter) != NULL;
+                        printf(" wm_class=\"%s\"<%d>", wm_class, class_match);
+                        XFree(wm_class);
+                    }
+
+                    skip = !(name_match || class_match);
+                    printf(" skip=%d\n", skip);
+                }
+
+                if( !skip )
+                    fuck_window_manager(display, has_rat);
             }
         }
     }
 }
 
-int main() {
+int main(int argc, char **argv) {
+    process_options(argc,argv);
+
     Display *display = XOpenDisplay(NULL);
     XEvent event;
     int num_screen,i;
