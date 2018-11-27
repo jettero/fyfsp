@@ -6,6 +6,9 @@ function do1() {
     echo
 }
 
+do1 autoconf --version
+do1 automake --version
+
 set -e
 do1 autoreconf -vi
-./configure "$@"
+do1 ./configure "$@"
