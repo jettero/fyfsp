@@ -159,10 +159,10 @@ int main(int argc, char **argv) {
 
     window_query_setup(display);
 
-	defaulthandler = XSetErrorHandler(errorhandler);
-	num_screen = ScreenCount(display);
-	for (i = 0; i < num_screen; i++)
-		XSelectInput(display, RootWindow(display, i), SubstructureNotifyMask);
+    defaulthandler = XSetErrorHandler(errorhandler);
+    num_screen = ScreenCount(display);
+    for (i = 0; i < num_screen; i++)
+        XSelectInput(display, RootWindow(display, i), SubstructureNotifyMask);
 
     Window has_rat = find_rat_window(display);
     Window has_focus = find_focus_window(display);
@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
 } while(0)
 
     while (1) {
-		XNextEvent(display, &event);
+        XNextEvent(display, &event);
 
         switch (event.type) {
             // Main Loop Events:
