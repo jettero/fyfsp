@@ -13,20 +13,27 @@
 #include "cache.h"
 
 char *filter = NULL;
+char verbose = 0;
 
 void process_options(int argc, char **argv) {
     int c;
     while( (c=getopt(argc, argv, "hf:")) != -1 ) {
         switch(c) {
             case 'h':
-                dprintf(1, "fyfsp [-h] [-f filter]\n");
+                dprintf(1, "fyfsp [-h] [-v] [-f filter]\n");
                 dprintf(1, "\nFiltering is simple string matching against the window title and class. "
                         "Fancier filters are a todo item. If the filter string is in either the title "
                         "or in the class: go ahead and fyfsp the focus change, otherwise, ignore it.\n"
                         );
+                dprintf(1, "\nThe -v verbose mode makes fyfsp print a message to stdout when it moves focus.\n")
                 exit(0);
+
             case 'f':
                 filter = optarg;
+                break;
+
+            case 'v':
+                verbose += 1;
                 break;
         }
     }
