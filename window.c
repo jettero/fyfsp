@@ -157,12 +157,13 @@ bool test_rat_window_has_focus(int depth, Display *display, Window has_rat, Wind
     return false;
 }
 
-void fuck_window_manager(Display *display, Window give_focus) {
+bool fuck_window_manager(Display *display, Window give_focus) {
     Window target = find_normal_window_from_the_top(display, give_focus);
+    bool did_something = false;
 
     if( !target ) {
         text_error("couldn't locate normal window for give-focus(0x%lx) target\n", give_focus);
-        return;
+        return did_something;
     }
 
 #ifdef DEBUG_NO_SET_FOCUS
@@ -185,7 +186,10 @@ void fuck_window_manager(Display *display, Window give_focus) {
 
         default:
             printf("XSetInputFocus(0x%lx→0x%lx) → success!! \\o/\n", give_focus, target);
+            did_something = 1;
     }
+
+    return did_something;
 }
 
 bool is_special_window(Display *display, Window window) {

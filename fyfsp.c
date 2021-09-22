@@ -17,7 +17,7 @@ char verbose = 0;
 
 void process_options(int argc, char **argv) {
     int c;
-    while( (c=getopt(argc, argv, "hf:")) != -1 ) {
+    while( (c=getopt(argc, argv, "hvf:")) != -1 ) {
         switch(c) {
             case 'h':
                 dprintf(1, "fyfsp [-h] [-v] [-f filter]\n");
@@ -25,7 +25,7 @@ void process_options(int argc, char **argv) {
                         "Fancier filters are a todo item. If the filter string is in either the title "
                         "or in the class: go ahead and fyfsp the focus change, otherwise, ignore it.\n"
                         );
-                dprintf(1, "\nThe -v verbose mode makes fyfsp print a message to stdout when it moves focus.\n")
+                dprintf(1, "\n-v, -vv, -vvv all make fyfsp print decision info to stdout.\n");
                 exit(0);
 
             case 'f':
@@ -88,39 +88,44 @@ void do_mainloop_checks(Display *display, Window has_rat, Window has_focus) {
                 printf("has-focus: 0x%lx « has-rat: 0x%lx\n", has_focus, has_rat);
 
             else {
-                printf("has-focus: 0x%lx ∉ has-rat: 0x%lx\n", has_focus, has_rat);
+                char *wm_name;
+                char *wm_class;
+
+                XFetchName(display, has_rat, &wm_name);
+                XFetchClass(display, has_rat, &wm_class);
+
+                printf("has-focus: 0x%lx ∉ has-rat: 0x%lx -- wm_name=\"%s\" wm_class=\"%s\"\n",
+                        has_focus, has_rat, wm_name, wm_class);
 
                 int skip = 0;
                 if( filter ) {
                     int name_match = 0;
                     int class_match = 0;
 
-                    char *wm_name;
-                    char *wm_class;
-
-                    XFetchName(display, has_rat, &wm_name);
-                    XFetchClass(display, has_rat, &wm_class);
-
                     printf("filter=\"%s\"", filter);
 
-                    if(wm_name) {
+                    if(wm_name)
                         name_match = strstr(wm_name, filter) != NULL;
-                        printf(" wm_name=\"%s\"<%d>", wm_name, name_match);
-                        XFree(wm_name);
-                    }
 
-                    if(wm_class) {
+                    if(wm_class)
                         class_match = strstr(wm_class, filter) != NULL;
-                        printf(" wm_class=\"%s\"<%d>", wm_class, class_match);
-                        XFree(wm_class);
-                    }
 
                     skip = !(name_match || class_match);
-                    printf(" skip=%d\n", skip);
+                    printf("filter skip=%d\n", skip);
                 }
 
+#ifdef DEBUG
                 if( !skip )
                     fuck_window_manager(display, has_rat);
+#else
+                if( !skip )
+                    if( fuck_window_manager(display, has_rat) && verbose > 0 )
+                        dprintf(1, "0x%lx \"%s\" \"%s\"\n",
+                                has_rat, wm_name, wm_class);
+#endif
+
+                XFree(wm_name);
+                XFree(wm_class);
             }
         }
     }

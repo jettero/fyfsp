@@ -12,7 +12,7 @@ Window find_rat_window(Display *display);
 Window find_focus_window(Display *display);
 
 bool test_rat_window_has_focus(int depth, Display *display, Window has_rat, Window has_focus);
-void fuck_window_manager(Display *display, Window give_focus);
+bool fuck_window_manager(Display *display, Window give_focus);
 
 bool is_special_window(Display *display, Window window);
 bool is_modal(Display *display, Window window);
